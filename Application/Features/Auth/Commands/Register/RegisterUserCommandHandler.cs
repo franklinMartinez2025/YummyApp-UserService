@@ -1,4 +1,5 @@
 using Application.Wrappers;
+using Domain.Common;
 using Domain.Entities;
 using Domain.Repositories;
 using MediatR;
@@ -7,11 +8,11 @@ namespace Application.Features.Auth.Commands.Register
 {
     public class RegisterUserCommandHandler : IRequestHandler<RegisterUserCommand, Response<bool>>
     {
-        private readonly IUserRepository _userRepository;
+        private readonly IUnitOfWork _unitOfWork;
 
-        public RegisterUserCommandHandler(IUserRepository userRepository)
+        public RegisterUserCommandHandler(IUnitOfWork unitOfWork)
         {
-            _userRepository = userRepository;
+            _unitOfWork = unitOfWork;
         }
 
         public async Task<Response<bool>> Handle(RegisterUserCommand request, CancellationToken cancellationToken)
@@ -20,7 +21,7 @@ namespace Application.Features.Auth.Commands.Register
 
             try
             {
-                if (!await _userRepository.IsEmailUniqueAsync(request.Email, cancellationToken))
+                if (!await _unitOfWork.UserRepository.IsEmailUniqueAsync(request.Email, cancellationToken))
                 {
                     throw new Exception("El correo ya existe.");
                 }
@@ -35,10 +36,14 @@ namespace Application.Features.Auth.Commands.Register
                     request.Role
                 );
 
-                await _userRepository.AddAsync(user, cancellationToken);
-                response.Succeeded = true;
-                response.Message = "El usuario se ha registrado correctamente.";
-                response.Data = true;
+                await _unitOfWork.UserRepository.AddAsync(user, cancellationToken);
+
+                if(await _unitOfWork.Commit(cancellationToken))
+                {
+                    response.Succeeded = true;
+                    response.Message = "El usuario se ha registrado correctamente.";
+                    response.Data = true;
+                }
             }
             catch (Exception ex)
             {
