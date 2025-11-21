@@ -9,16 +9,20 @@ namespace Infrastructure.Persistence.common
         private bool disposed;
         private readonly AppDbContext _dbContext;
         private readonly Lazy<IUserRepository> _userRepository;
+        private readonly Lazy<IRoleRepository> _roleRepository;
 
         public IUserRepository UserRepository => _userRepository.Value;
+        public IRoleRepository RoleRepository => _roleRepository.Value;
 
         public UnitOfWork(
         AppDbContext dbContext,
-        Lazy<IUserRepository> userRepository
+        Lazy<IUserRepository> userRepository,
+        Lazy<IRoleRepository> roleRepository
         )
         {
             _dbContext = dbContext;
             _userRepository = userRepository;
+            _roleRepository = roleRepository;
         }
 
         public async Task<bool> Commit(CancellationToken cancellationToken)

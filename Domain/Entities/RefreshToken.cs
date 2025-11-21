@@ -12,6 +12,8 @@ namespace Domain.Entities
 
         public bool IsRevoked { get; private set; }
 
+        private RefreshToken() { }
+
         public RefreshToken(int userId, string token, DateTime expiryDate)
         {
             UserId = userId;

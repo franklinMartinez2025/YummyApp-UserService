@@ -43,7 +43,7 @@ namespace Application.Features.Auth.Commands.Login
                 {
                     FullName = user.FullName,
                     Email = user.Email,
-                    Roles = user.Role,
+                    Roles = user.Roles.Select(r => r.Name).ToList(),
                     JwToken = accessToken,
                     RefreshToken = refreshToken
                 };

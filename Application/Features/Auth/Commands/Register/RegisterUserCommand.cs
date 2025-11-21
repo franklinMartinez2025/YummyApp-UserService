@@ -1,5 +1,4 @@
 using Application.Wrappers;
-using Domain.Enums;
 using MediatR;
 
 namespace Application.Features.Auth.Commands.Register
@@ -9,6 +8,6 @@ namespace Application.Features.Auth.Commands.Register
         string Email,
         string Password,
         string PhoneNumber,
-        UserRole Role
+        string RoleName
     ) : IRequest<Response<bool>>;
 }

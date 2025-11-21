@@ -32,9 +32,18 @@ namespace Application.Features.Auth.Commands.Register
                     request.FullName,
                     request.Email,
                     passwordHash,
-                    request.PhoneNumber,
-                    request.Role
+                    request.PhoneNumber
                 );
+
+                // Buscar el rol por nombre
+                var role = await _unitOfWork.RoleRepository.GetByNameAsync(request.RoleName, cancellationToken);
+
+                if (role == null)
+                {
+                    throw new Exception($"El rol '{request.RoleName}' no existe.");
+                }
+
+                user.AssignRole(role);
 
                 await _unitOfWork.UserRepository.AddAsync(user, cancellationToken);
 

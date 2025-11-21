@@ -1,5 +1,4 @@
 ﻿using Domain.Common;
-using Domain.Enums;
 
 namespace Domain.Entities
 {
@@ -15,8 +14,6 @@ namespace Domain.Entities
 
         public string? ProfilePictureUrl { get; private set; }
 
-        public UserRole Role { get; private set; }
-
         public bool IsActive { get; private set; }
 
         private readonly List<Address> _addresses = new();
@@ -27,16 +24,25 @@ namespace Domain.Entities
 
         public IReadOnlyCollection<RefreshToken> RefreshTokens => _refreshTokens.AsReadOnly();
 
+        private readonly List<Role> _roles = new();
+
+        public IReadOnlyCollection<Role> Roles => _roles.AsReadOnly();
+
         private User() { }
 
-        public User(string fullName, string email, string passwordHash, string phoneNumber, UserRole role)
+        public User(string fullName, string email, string passwordHash, string phoneNumber)
         {
             FullName = fullName;
             Email = email;
             PasswordHash = passwordHash;
             PhoneNumber = phoneNumber;
-            Role = role;
             IsActive = true;
+        }
+
+        public void AssignRole(Role role)
+        {
+            if (!_roles.Contains(role))
+                _roles.Add(role);
         }
 
         public void UpdateProfile(string fullName, string phoneNumber, string? profilePictureUrl)

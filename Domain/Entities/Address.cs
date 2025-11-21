@@ -20,7 +20,7 @@ namespace Domain.Entities
 
         public bool IsMain { get; private set; }
 
-        public Address() { }
+        private Address() { }
 
         public Address(int userId, string street, string city, string zipCode, string country, bool isMain, double lat, double lng)
         {

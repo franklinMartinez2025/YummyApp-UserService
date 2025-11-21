@@ -18,6 +18,7 @@ namespace Infrastructure.Persistence.Repositories
         {
             return await _dbContext.Users
                 .Include(u => u.RefreshTokens)
+                .Include(u => u.Roles)
                 .FirstOrDefaultAsync(u => u.Email == email, cancellationToken);
         }
 
@@ -25,6 +26,7 @@ namespace Infrastructure.Persistence.Repositories
         {
             return await _dbContext.Users
                 .Include(u => u.RefreshTokens)
+                .Include(u => u.Roles)
                 .FirstOrDefaultAsync(u => u.Id == id, cancellationToken);
         }
 
@@ -32,6 +34,7 @@ namespace Infrastructure.Persistence.Repositories
         {
             return await _dbContext.Users
                 .Include(u => u.RefreshTokens)
+                .Include(u => u.Roles)
                 .FirstOrDefaultAsync(u => u.RefreshTokens.Any(rt => rt.Token == token), cancellationToken);
         }
 

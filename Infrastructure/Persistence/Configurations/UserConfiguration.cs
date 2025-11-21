@@ -30,14 +30,33 @@ namespace Infrastructure.Persistence.Configurations
 
             builder.HasIndex(u => u.Email).IsUnique();
 
-            builder.Property(u => u.Role)
-                .HasConversion<string>()
+            builder.Property(u => u.PhoneNumber)
+                .IsRequired()
                 .HasMaxLength(20);
+
+            builder.Property(u => u.PasswordHash)
+                .IsRequired()
+                .HasMaxLength(255);
+
+            builder.Property(u => u.ProfilePictureUrl)
+                .HasMaxLength(500);
+
+            builder.Property(u => u.IsActive)
+                .IsRequired();
 
             builder.HasMany(u => u.Addresses)
                 .WithOne()
                 .HasForeignKey(a => a.UserId)
                 .OnDelete(DeleteBehavior.Cascade);
+
+            builder.HasMany(u => u.RefreshTokens)
+                .WithOne()
+                .HasForeignKey(rt => rt.UserId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            builder.HasMany(u => u.Roles)
+                .WithMany()
+                .UsingEntity<UserRole>();
         }
     }
 }
